@@ -9,11 +9,18 @@ import {
 import { Stack, useRouter, useGlobalSearchParams } from "expo-router";
 import { Text, SafeAreaView } from "react-native";
 import axios from "axios";
+import { searchResult } from "@/data";
 
 import { ScreenHeaderBtn, NearbyJobCard } from "../../components";
 import { COLORS, icons, SIZES } from "../../constants";
 import styles from "../../styles/search";
 const rapidApiKey = process.env.EXPO_PUBLIC_RAPID_API_KEY;
+
+const getData = (page: number) => {
+  const limit = 10;
+  const data = searchResult.slice((page - 1) * limit, page * 10);
+  return data ?? [];
+};
 
 const JobSearch = () => {
   const params = useGlobalSearchParams();
@@ -29,24 +36,27 @@ const JobSearch = () => {
     setSearchResult([]);
 
     try {
-      const options = {
-        method: "GET",
-        url: `https://jsearch.p.rapidapi.com/search`,
-        headers: {
-          "X-RapidAPI-Key": `${rapidApiKey}`,
-          "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
-        },
-        params: {
-          query: params.query,
-          page: page.toString(),
-        },
-      };
+      //   const options = {
+      //     method: "GET",
+      //     url: `https://jsearch.p.rapidapi.com/search`,
+      //     headers: {
+      //       "X-RapidAPI-Key": `${rapidApiKey}`,
+      //       "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
+      //     },
+      //     params: {
+      //       query: params.query,
+      //       page: page.toString(),
+      //     },
+      //   };
 
-      const response = await axios.request(options);
-      setSearchResult(response.data.data);
+      //   const response = await axios.request(options);
+      //   setSearchResult(response.data.data);
+      //   setSearchResult(getData(page));
+      const data = getData(page);
+      setSearchResult(data);
     } catch (error) {
       setSearchError(error);
-      console.log(error);
+      console.error(error);
     } finally {
       setSearchLoader(false);
     }
@@ -96,7 +106,7 @@ const JobSearch = () => {
         ListHeaderComponent={() => (
           <>
             <View style={styles.container}>
-              <Text style={styles.searchTitle}>{params.id}</Text>
+              <Text style={styles.searchTitle}>{params.query}</Text>
               <Text style={styles.noOfSearchedJobs}>Job Opportunities</Text>
             </View>
             <View style={styles.loaderContainer}>

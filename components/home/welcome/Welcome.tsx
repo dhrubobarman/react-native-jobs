@@ -36,7 +36,7 @@ const Welcome = ({
           <TextInput
             style={styles.searchInput}
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.nativeEvent.text)}
+            onChangeText={(text) => setSearchTerm(text)}
             placeholder="What are you looking for?"
           />
         </View>
