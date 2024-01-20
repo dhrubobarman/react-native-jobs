@@ -15,7 +15,10 @@ import styles from "./popularjobs.style";
 const Popularjobs = () => {
   const router = useRouter();
   const [selectedJob, setSelectedJobs] = useState("");
-  const handleCardPress = (item: any) => {};
+  const handleCardPress = (item: any) => {
+    router.push(`/job-details/${item.job_id}`);
+    setSelectedJobs(item.job_id);
+  };
 
   const { data, isLoading, error } = useFetch("search", {
     query: "React developer",
